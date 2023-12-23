@@ -13,7 +13,7 @@ public class SvgProcessor : IImageProcessor
     public void ModulateHue(string path, double hueAngle)
     {
         var config = Config.Get();
-        string origColor = config.Painter.LatestColor.ToLower(); // #478cbf by default
+        string origColor = config.Painter.BaseColor.ToLower(); // #478cbf by default
         string newColor = AdjustHex(origColor, hueAngle);
         var svgContents = File.ReadAllText(path);
         Console.WriteLine($"Replacing {origColor} with {newColor} in {path}");

@@ -52,7 +52,7 @@ public class Config
 public class PainterConfig
 {
     public const string DefaultColor = "#478cbf";
-    public string LatestColor = DefaultColor;
+    public string BaseColor = DefaultColor;
     public double HueAdjust = 65;
 
     public string[] Files = new[]
