@@ -60,7 +60,7 @@ public class PainterConfig
         "logo_outlined.svgpng",
         "logo.svgpng",
         "icon.svgpng",
-        "logo_outlined.svgpng",
+        "icon_outlined.svgpng",
         "misc/dist/project_icon.svg",
         "misc/dist/icon_console.svg",
         "main/app_icon.png",
