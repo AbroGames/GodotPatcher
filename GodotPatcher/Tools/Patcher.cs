@@ -19,9 +19,14 @@ public static class Patcher
         var config = Config.Get();
         replacementTargets = config.Patcher.ReplacementTargets ?? replacementTargets;
         targetExtensions = config.Patcher.TargetExtensions ?? targetExtensions;
+        
         foreach (var replacementTarget in replacementTargets)
         {
             replacementPairs[replacementTarget] = replacementTarget.Replace("Godot", config.Patcher.GodotRename ?? "Godot");
+        }
+        foreach (var (key, value) in config.Patcher.SpecificReplacements)
+        {
+            replacementPairs[key] = value;
         }
     }
     

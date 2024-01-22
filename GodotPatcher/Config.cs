@@ -75,11 +75,12 @@ public class PainterConfig
 public class PatcherConfig
 {
     public string? GodotRename = "Abrodot";
-    public List<string>? TargetExtensions = new(){".sln", ".csproj", ".props", ".targets", ".py", ".sh", ".h", ".cpp", ".xml", ".cs"};
+    public List<string>? TargetExtensions = new() { ".sln", ".csproj", ".props", ".targets", ".py", ".sh", ".h", ".cpp", ".xml", ".cs" };
     public List<string>? ReplacementTargets = new() { "GodotSharp", "Godot.NET.Sdk", "Godot.SourceGenerators", "GodotPlugins", "GodotTools" };
+    public Dictionary<string, string>? SpecificReplacements = new() {{ "project.godot", "project.abrodot" }};
 
     
-    // version.py
+// version.py
     public string? ShortName = "abrodot";
     public string? Name = "Abrodot Engine";
     public int Major = -1;
