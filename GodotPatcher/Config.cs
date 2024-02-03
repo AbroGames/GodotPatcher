@@ -53,7 +53,7 @@ public class PainterConfig
 {
     public const string DefaultColor = "#478cbf";
     public string BaseColor = DefaultColor;
-    public double HueAdjust = 65;
+    public double HueAdjust = 270;
 
     public string[] Files = new[]
     {
@@ -75,17 +75,22 @@ public class PainterConfig
 public class PatcherConfig
 {
     public string? GodotRename = "Abrodot";
-    public List<string>? TargetExtensions = new() { ".sln", ".csproj", ".props", ".targets", ".py", ".sh", ".h", ".cpp", ".xml", ".cs" };
+    public List<string>? TargetExtensions = new() { ".sln", ".csproj", ".props", ".targets", ".py", ".sh", ".h", ".cpp", ".xml", ".cs", ".yml", ".xml" };
     public List<string>? ReplacementTargets = new() { "GodotSharp", "Godot.NET.Sdk", "Godot.SourceGenerators", "GodotPlugins", "GodotTools" };
-    public Dictionary<string, string>? SpecificReplacements = new() {{ "project.godot", "project.abrodot" }};
-
+    public Dictionary<string, string>? SpecificReplacements = new()
+    {
+        { "project.godot", "project.abd" },
+        { "ends_with(\".godot\")", "ends_with(\".abd\")" },
+        { "<GodotFloat64 Condition=\" '$(GodotFloat64)' == '' \">false</GodotFloat64>", "<GodotFloat64 Condition=\" '$(GodotFloat64)' == '' \">true</GodotFloat64>" }
+    };
+    public bool IgnoreExtensions = true;
     
 // version.py
     public string? ShortName = "abrodot";
     public string? Name = "Abrodot Engine";
     public int Major = -1;
     public int Minor = -1;
-    public int Patch = -1;
+    public int Patch = 1;
     public string? Status = "abro-stable";
     public string? ModuleConfig = null;
     public int Year = -2; // Use -1 to not change and -2 to replace with current year.

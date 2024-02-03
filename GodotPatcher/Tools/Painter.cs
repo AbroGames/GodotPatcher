@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using ColorHelper;
 using GodotPatcher.Processors;
+using GodotPatcher.Tools;
 
 namespace GodotPatcher;
 
@@ -13,11 +14,12 @@ public static class Painter
         foreach (var image in images)
         {
             var format = Path.GetExtension(image).Substring(1);
-            Console.WriteLine($"Painting {image} as {format}");
+            Logger.Log($"Painting {image} as {format}");
             ImageProcessors.Processors[format].ModulateHue(Path.GetFullPath(Path.Combine(path,image)), Config.Get().Painter.HueAdjust);
         }
         
-        PatchThemes(path);
+        // Disabled for now
+        //PatchThemes(path);
     }
 
     private static void PatchThemes(string root)
@@ -54,9 +56,11 @@ public static class Painter
                                   $"{newG.ToString("N2", CultureInfo.InvariantCulture)}, " +
                                   $"{newB.ToString("N2", CultureInfo.InvariantCulture)}" +
                                   $"{match.Groups[6]}";
-            Console.WriteLine($"Replacing {match.Groups[0]} with {lineReplacement}");
+            Logger.Log($"Replacing {match.Groups[0]} with {lineReplacement}");
             newContents = newContents.Replace(match.Groups[0].ToString(), lineReplacement);
         }
+        
+        File.WriteAllText(path, newContents);
     }
     
     private static IImageProcessor GetProcessor(string format)

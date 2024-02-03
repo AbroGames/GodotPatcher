@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using GodotPatcher.Tools;
 
 namespace GodotPatcher;
@@ -8,6 +9,7 @@ public static class Patcher
     private static List<string> replacementTargets;
     static List<string> targetExtensions;
     private static Dictionary<string, string> replacementPairs = new();
+    private static bool ignoreExtensions;
 
     static Patcher()
     {
@@ -19,6 +21,7 @@ public static class Patcher
         var config = Config.Get();
         replacementTargets = config.Patcher.ReplacementTargets ?? replacementTargets;
         targetExtensions = config.Patcher.TargetExtensions ?? targetExtensions;
+        ignoreExtensions = config.Patcher.IgnoreExtensions;
         
         foreach (var replacementTarget in replacementTargets)
         {
@@ -102,6 +105,9 @@ public static class Patcher
     
     public static void ProcessDirectory(string dirPath, uint depth  = 0, bool inverted = false)
     {
+        if (dirPath.EndsWith(".git") || dirPath.EndsWith(".github"))
+            return;
+        
         Logger.Log($"#{Statistics.CountScannedDir()} Processing directory {dirPath}:", depth);
         var dirs = Directory.GetDirectories(dirPath);
         var files = Directory.GetFiles(dirPath);
@@ -124,8 +130,18 @@ public static class Patcher
     {
         foreach (var targetExtension in targetExtensions)
         {
-            if(!file.EndsWith(targetExtension))
+            if(!(ignoreExtensions || file.EndsWith(targetExtension)))
                 continue;
+
+            if (file.EndsWith(".exe") 
+                || file.EndsWith(".dll") 
+                || file.EndsWith(".obj") 
+                || file.EndsWith(".lib") 
+                || file.EndsWith(".png") 
+                || file.EndsWith("GodotPatcher.cfg")
+                )
+                break;
+            
             Statistics.CountScannedFile();
             var contents = File.ReadAllText(file);
             var newContents = contents;
@@ -167,12 +183,49 @@ public static class Patcher
         FileAttributes attr = File.GetAttributes(path);
         if (attr.HasFlag(FileAttributes.Directory))
         {
-            Directory.Move(path, newPath);
+            bool attempt = false;
+            RetryDir:
+            try
+            {
+                Directory.Move(path, newPath);
+            }
+            catch (Exception e)
+            {
+                Logger.Warn($"Error moving dir");
+                Logger.Warn($"From: {path}");
+                Logger.Warn($"To: {newPath}");
+                if (!attempt)
+                {
+                    Logger.Log("Trying to remove and try again");
+                    Directory.Delete(newPath, true);
+                    goto RetryDir;
+                }
+                throw;
+            }
             Logger.Log($"#{Statistics.CountRenamedDir()} Directory {baseName} was renamed to {name}", depth);
         }
         else
         {
-            File.Move(path, newPath);
+            bool attempt = false;
+            RetryFile:
+            try
+            {
+                File.Move(path, newPath);
+            }
+            catch (Exception e)
+            {
+                Logger.Warn($"Error moving file");
+                Logger.Warn($"From: {path}");
+                Logger.Warn($"To: {newPath}");
+                Logger.Warn(e.Message);
+                if (!attempt)
+                {
+                    Logger.Log("Trying to remove and try again");
+                    File.Delete(newPath);
+                    goto RetryFile;
+                }
+                throw;
+            }
             Logger.Log($"#{Statistics.CountRenamedFile()} File {baseName} was renamed to {name}", depth);
         }
     }
