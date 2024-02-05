@@ -79,8 +79,8 @@ public class PatcherConfig
     public List<string>? ReplacementTargets = new() { "GodotSharp", "Godot.NET.Sdk", "Godot.SourceGenerators", "GodotPlugins", "GodotTools" };
     public Dictionary<string, string>? SpecificReplacements = new()
     {
-        { "project.godot", "project.abd" },
-        { "ends_with(\".godot\")", "ends_with(\".abd\")" },
+        //{ "project.godot", "project.abd" },
+        //{ "ends_with(\".godot\")", "ends_with(\".abd\")" },
         { "<GodotFloat64 Condition=\" '$(GodotFloat64)' == '' \">false</GodotFloat64>", "<GodotFloat64 Condition=\" '$(GodotFloat64)' == '' \">true</GodotFloat64>" }
     };
     public bool IgnoreExtensions = true;
