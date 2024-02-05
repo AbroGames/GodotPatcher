@@ -88,9 +88,9 @@ public class PatcherConfig
 // version.py
     public string? ShortName = "abrodot";
     public string? Name = "Abrodot Engine";
-    public int Major = -1;
-    public int Minor = -1;
-    public int Patch = 1;
+    public int Major = 4;
+    public int Minor = 2;
+    public int Patch = 2;
     public string? Status = "abro-stable";
     public string? ModuleConfig = null;
     public int Year = -2; // Use -1 to not change and -2 to replace with current year.
