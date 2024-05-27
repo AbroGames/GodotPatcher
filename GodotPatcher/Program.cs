@@ -30,14 +30,17 @@ class Program
         Dictionary<string, string> renamings = new()
         {
             {"godot.windows.editor.double.x86_64.mono", config.GodotRename},
+            {"godot.linuxbsd.editor.double.x86_64.mono", config.GodotRename},
+            {"godot.windows.template_release.double.x86_64.mono", "windows_release_x86_64"},
             {"godot.windows.template_debug.double.x86_64.mono", "windows_debug_x86_64"},
-            {"godot.windows.template_release.double.x86_64.mono", "windows_release_x86_64"}
+            {"godot.linuxbsd.template_release.double.x86_64.mono", "linux_release.x86_64"},
+            {"godot.linuxbsd.template_debug.double.x86_64.mono", "linux_debug_x86.64"},
         };
         
         string basePath = "./bin/";
         string buildName = $"{config.Major}.{config.Minor}.{config.Patch}.{config.Status}.mono";
         File.Create(Path.Combine(basePath, "_sc_")).Dispose();
-        string exportPath = Path.Combine(basePath, @"editor_data\export_templates\"+buildName);
+        string exportPath = Path.Combine(basePath, "editor_data", "export_templates", buildName);
         
         Directory.CreateDirectory(exportPath);
         Directory.Delete(exportPath, true);
@@ -58,7 +61,7 @@ class Program
                 }
 
                 var fileName = Path.GetFileName(newFile);
-                if (fileName.Contains("windows_debug_x86_64") || fileName.Contains("windows_release_x86_64"))
+                if (fileName.Contains("_debug_x86_64") || fileName.Contains("_release_x86_64"))
                 {
                     File.Move(file, Path.Combine(exportPath, fileName));
                 }
