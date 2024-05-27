@@ -15,7 +15,15 @@ public static class Painter
         {
             var format = Path.GetExtension(image).Substring(1);
             Logger.Log($"Painting {image} as {format}");
-            ImageProcessors.Processors[format].ModulateHue(Path.GetFullPath(Path.Combine(path,image)), Config.Get().Painter.HueAdjust);
+            try
+            {
+                ImageProcessors.Processors[format].ModulateHue(Path.GetFullPath(Path.Combine(path, image)),
+                    Config.Get().Painter.HueAdjust);
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Unable to paint file {image}: {e.Message}");
+            }
         }
         
         // Disabled for now
