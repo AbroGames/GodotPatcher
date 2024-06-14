@@ -1,4 +1,5 @@
-﻿using ColorHelper;
+﻿using System.Text.RegularExpressions;
+using ColorHelper;
 using GodotPatcher.Tools;
 
 namespace GodotPatcher;
@@ -61,7 +62,8 @@ class Program
                 }
 
                 var fileName = Path.GetFileName(newFile);
-                if (fileName.Contains("_debug_x86_64") || fileName.Contains("_release_x86_64"))
+                var fuckingRegex = new Regex(@"^(.*)_(debug|release)(\.|_)x86(\.|_)64(\.exe)?$");
+                if (fuckingRegex.IsMatch(fileName))
                 {
                     File.Move(file, Path.Combine(exportPath, fileName));
                 }
